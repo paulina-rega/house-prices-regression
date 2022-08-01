@@ -13,12 +13,15 @@ import numpy as np
 from scipy.stats import norm
 from sklearn.preprocessing import StandardScaler
 from scipy import stats
-import warnings
-warnings.filterwarnings('ignore')
+import missingno as msno
+#import warnings
+#warnings.filterwarnings('ignore')
 
 
 
 df_train = pd.read_csv('train.csv')
+df_test = pd.read_csv('test.csv')
+
 
 df_analysis = pd.read_csv('data_analysis_by_importance.csv', sep=';')
 
@@ -144,7 +147,14 @@ total = df_train.isnull().sum().sort_values(ascending=False)
 percent = (df_train.isnull().sum()/df_train.isnull().count()).sort_values(
     ascending=False)
 missing_data = pd.concat([total, percent], axis=1, keys=['Total', 'Percent'])
-missing_data.head(20)
+print(missing_data.head(20))
+
+#missing value for test set
+total_test = df_test.isnull().sum().sort_values(ascending=False)
+percent_test = (df_test.isnull().sum()/df_test.isnull().count()).sort_values(
+    ascending=False)
+missing_data_test = pd.concat([total_test, percent_test], axis=1, keys=['Total', 'Percent'])
+print(missing_data_test.head(30))
 
 
 
@@ -216,6 +226,7 @@ res = stats.probplot(df_train['GrLivArea'], plot=plt)
 
 #data transformation
 df_train['GrLivArea'] = np.log(df_train['GrLivArea'])
+df_test['GrLivArea'] = np.log(df_test['GrLivArea'])
 
 
 
@@ -241,8 +252,14 @@ df_train['HasBsmt'] = pd.Series(len(df_train['TotalBsmtSF']), index=df_train.ind
 df_train['HasBsmt'] = 0 
 df_train.loc[df_train['TotalBsmtSF']>0,'HasBsmt'] = 1
 
+df_test['HasBsmt'] = pd.Series(len(df_test['TotalBsmtSF']), index=df_test.index)
+df_test['HasBsmt'] = 0 
+df_test.loc[df_test['TotalBsmtSF']>0,'HasBsmt'] = 1
+
+
 #transform data
 df_train.loc[df_train['HasBsmt']==1,'TotalBsmtSF'] = np.log(df_train['TotalBsmtSF'])
+df_test.loc[df_test['HasBsmt']==1,'TotalBsmtSF'] = np.log(df_test['TotalBsmtSF'])
 
 #histogram and normal probability plot
 sns.distplot(df_train[df_train['TotalBsmtSF']>0]['TotalBsmtSF'], fit=norm);
@@ -260,6 +277,45 @@ plt.scatter(df_train[df_train['TotalBsmtSF']>0]['TotalBsmtSF'], df_train[df_trai
 
 
 
+# Preprocessing df_test:
+    
+#dropping columns:
+# col_to_leave = df_train.columns.tolist()
+# col_to_leave.remove('SalePrice')
+# df_test = df_test[col_to_leave]
+
+
+
+
+msno.matrix(df_test)
+msno.matrix(df_train)
+
+
+
+
+
+
+
+#choosing top 10 parameters for model
+important_pred = corrmat.nlargest(10, 'SalePrice')['SalePrice'].index.tolist()
+important_pred_train = important_pred.copy()
+important_pred.remove('SalePrice')
+df_train = df_train[important_pred_train]
+df_test = df_test[important_pred]
+
+
+msno.matrix(df_test)
+msno.matrix(df_train)
+
+
+
 #convert categorical variable into dummy
-df_train = pd.get_dummies(df_train)
+#df_train = pd.get_dummies(df_train)
+
+
+
+
+
+# to make prediction submittable – apply function e on saleprice
+
 
