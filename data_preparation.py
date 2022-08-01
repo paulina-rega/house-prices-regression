@@ -1,11 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-Created on Sat Jul 16 22:16:37 2022
-
-@author: paulinarega
-"""
-
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
@@ -287,11 +279,6 @@ plt.scatter(df_train[df_train['TotalBsmtSF']>0]['TotalBsmtSF'], df_train[df_trai
 
 
 
-msno.matrix(df_test)
-msno.matrix(df_train)
-
-
-
 
 
 
@@ -313,9 +300,8 @@ msno.matrix(df_train)
 #df_train = pd.get_dummies(df_train)
 
 
+df_train.to_csv('data_train_processed.csv', index=False)
+df_test.to_csv('data_test_processed.csv', index=False)
 
-
-
-# to make prediction submittable – apply function e on saleprice
 
 
