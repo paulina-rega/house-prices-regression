@@ -284,7 +284,7 @@ plt.scatter(df_train[df_train['TotalBsmtSF']>0]['TotalBsmtSF'], df_train[df_trai
 
 
 #choosing top 10 parameters for model
-important_pred = corrmat.nlargest(10, 'SalePrice')['SalePrice'].index.tolist()
+important_pred = corrmat.nlargest(5, 'SalePrice')['SalePrice'].index.tolist()
 important_pred_train = important_pred.copy()
 important_pred.remove('SalePrice')
 df_train = df_train[important_pred_train]
@@ -294,6 +294,14 @@ df_test = df_test[important_pred]
 msno.matrix(df_test)
 msno.matrix(df_train)
 
+
+
+#Garage NaN value set to 0
+df_test['GarageCars'] = df_test['GarageCars'].fillna(0)
+df_test['GarageArea'] = df_test['GarageCars'].fillna(0)
+
+# TotaLBsmntSF NaNs to 0:
+df_test['TotalBsmtSF'] = df_test['TotalBsmtSF'].fillna(0)
 
 
 #convert categorical variable into dummy
