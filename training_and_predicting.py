@@ -3,7 +3,7 @@ import numpy as np
 from sklearn.linear_model import LinearRegression
 from sklearn.model_selection import train_test_split
 
-# reading data
+# reading data:
 df_train = pd.read_csv('data_train_processed.csv')
 df_test = pd.read_csv('data_test_processed.csv')
 
@@ -36,5 +36,4 @@ ids = pd.Series(i['Id'])
 df_kaggle = pd.DataFrame({'Id': ids, 'SalePrice': y_kaggle})
 
 # exporting predictions
-df_kaggle.to_csv('df_kaggle.csv', index=False)
-
+df_kaggle.to_csv('prediction.csv', index=False)
