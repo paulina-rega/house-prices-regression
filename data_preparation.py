@@ -187,7 +187,7 @@ sns.distplot(df_train['TotalBsmtSF'], fit=norm);
 fig = plt.figure()
 res = stats.probplot(df_train['TotalBsmtSF'], plot=plt)
 
-# c reate column for new variable (one is enough because it's a binary 
+# create column for new variable (one is enough because it's a binary 
 # categorical feature)
 # if area>0 it gets 1, for area==0 it gets 0
 df_train['HasBsmt'] = pd.Series(
@@ -217,10 +217,11 @@ plt.scatter(df_train['GrLivArea'], df_train['SalePrice']);
 
 # scatter plot
 plt.scatter(
-    df_train[df_train['TotalBsmtSF']>0]['TotalBsmtSF'], df_train[df_train['TotalBsmtSF']>0]['SalePrice']);
+    df_train[df_train['TotalBsmtSF']>0]['TotalBsmtSF'], 
+    df_train[df_train['TotalBsmtSF']>0]['SalePrice']);
 
 #choosing top 10 parameters for model
-important_pred = corrmat.nlargest(5, 'SalePrice')['SalePrice'].index.tolist()
+important_pred = corrmat.nlargest(10, 'SalePrice')['SalePrice'].index.tolist()
 important_pred_train = important_pred.copy()
 important_pred.remove('SalePrice')
 df_train = df_train[important_pred_train]
